@@ -1,28 +1,32 @@
 services:
-  llm:
-    image: ghcr.io/abetlen/llama-cpp-python:latest
-    container_name: llama-server
-    ports:
-      - "8080:8000"
+  # The Inference Engine (Llama Stack / Ollama)
+  # Note: Ollama is the most stable 'stack' for Mac Podman users
+  ollama:
+    image: ollama/ollama:latest
+    container_name: ollama
     volumes:
+      - ollama_data:/root/.ollama
       - ./models:/models
-    environment:
-      - MODEL=/models/granite-4.0-h-micro-Q4_K_M.gguf
-    command: >
-      python3 -m llama_cpp.server
-      --model /models/granite-4.0-h-micro-Q4_K_M.gguf
-      --host 0.0.0.0
-      --port 8000
+    ports:
+      - "11434:11434"
     restart: unless-stopped
 
-  webui:
-    image: ghcr.io/open-webui/open-webui:latest
+  # The Frontend
+  open-webui:
+    image: ghcr.io/open-webui/open-webui:main
     container_name: open-webui
+    depends_on:
+      - ollama
     ports:
       - "3000:8080"
     environment:
-      - OPENAI_API_BASE_URL=http://llm:8080/v1
-      - OPENAI_API_KEY=local
-    depends_on:
-      - llm
+      - OLLAMA_BASE_URL=http://ollama:11434
+      # For Podman on Mac, this helps resolve the internal container network
+      - DOCKER_HOST=unix:///var/run/docker.sock
+    volumes:
+      - open-webui_data:/app/backend/data
     restart: unless-stopped
+
+volumes:
+  ollama_data:
+  open-webui_data:

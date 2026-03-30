@@ -1,0 +1,30 @@
+services:
+  llm:
+    image: ghcr.io/abetlen/llama-cpp-python:latest
+    container_name: llama-server
+    ports:
+      - "11223:8000"
+    volumes:
+      - ./models:/models
+    environment:
+      - MODEL=/models/granite-4.0-micro-Q4_K_M.gguf
+    command: >
+      python3 -m llama_cpp.server
+      --model /models/granite-4.0-micro-Q4_K_M.gguf
+      --host 0.0.0.0
+      --port 8000
+    restart: unless-stopped
+
+  webui:
+    image: ghcr.io/open-webui/open-webui:latest
+    container_name: open-webui
+    ports:
+      - "3000:8080"
+    environment:
+      - OPENAI_API_BASE_URL=http://llm:8000/v1
+      # For Podman on Mac, this helps resolve the internal container network
+      - DOCKER_HOST=unix:///var/run/docker.sock
+      - OPENAI_API_KEY=local
+    depends_on:
+      - llm
+    restart: unless-stopped
