@@ -11,6 +11,8 @@ not recommended for Mac Silicone
 using:
 - granite-4.0-micro-Q4_K_M.gguf
 
+![simple llama-server](./img/llama-server.png "simple llama-server")
+
 ```yaml
 services:
   llm:
@@ -47,6 +49,8 @@ services:
 ## OLLAMA
 
 For use with a MAC Air and Apple Silicone
+
+![simple ollama-server](./img/ollama.png "simple ollama-server")
 
 compose:
 
@@ -95,6 +99,10 @@ podman exec -it ollama ollama create local-granite -f /models/granite.Modelfile
 You can also download odels from ollame site. Here you can use the granite3.1-dense
 
 ## Ollama with external Search
+
+To give your local LLM access to real-time weather and external data, the standard infrastructure approach is to add SearXNG, a private, self-hosted internet search engine. Open WebUI natively integrates with it to fetch live information (like current weather forecasts) before the LLM generates a response.
+
+![simple ollama-server with searxng](./img/searxng.png "simple ollama-server with searxng")
 
 ```yaml
 services:
