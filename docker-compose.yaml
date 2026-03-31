@@ -17,16 +17,32 @@ services:
     container_name: open-webui
     depends_on:
       - ollama
+      - searxng
     ports:
       - "3000:8080"
     environment:
       - OLLAMA_BASE_URL=http://ollama:11434
       # For Podman on Mac, this helps resolve the internal container network
       - DOCKER_HOST=unix:///var/run/docker.sock
+      # Enable external real-time data via web search
+      - ENABLE_RAG_WEB_SEARCH=True
+      - RAG_WEB_SEARCH_ENGINE=searxng
+      # The <query> tag is explicitly required by Open WebUI
+      - SEARXNG_QUERY_URL=http://searxng:8080/search?q=<query>
     volumes:
       - open-webui_data:/app/backend/data
     restart: unless-stopped
-
+# The External Data Source: SearXNG (Real-time Web Search)
+  searxng:
+    image: searxng/searxng:latest
+    container_name: searxng
+    ports:
+      - "8080:8080"
+    volumes:
+      # We mount a local folder to hold the SearXNG configuration
+      - ./searxng:/etc/searxng:rw
+    restart: unless-stopped
+    
 volumes:
   ollama_data:
   open-webui_data:

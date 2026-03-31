@@ -1,0 +1,4 @@
+search:
+  formats:
+    - html
+    - json # This is required for Open WebUI to read the data
