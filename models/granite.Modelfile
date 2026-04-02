@@ -1,5 +1,5 @@
 # 1. Point to the local file (path relative to INSIDE the container)
-FROM /models/granite-4.0-h-tiny-Q4_K_M.gguf 
+FROM /models/granite-4.0-h-micro-Q4_K_M.gguf 
 
 # 2. Set the 'creativity' level
 PARAMETER temperature 0.7
