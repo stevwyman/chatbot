@@ -27,6 +27,8 @@ services:
       # Enable external real-time data via web search
       - ENABLE_RAG_WEB_SEARCH=True
       - RAG_WEB_SEARCH_ENGINE=searxng
+      - RAG_WEB_SEARCH_RESULT_COUNT=3
+      - RAG_WEB_SEARCH_CONCURRENT_REQUESTS=10
       # The <query> tag is explicitly required by Open WebUI
       - SEARXNG_QUERY_URL=http://searxng:8080/search?q=<query>
     volumes:
@@ -42,6 +44,18 @@ services:
       # We mount a local folder to hold the SearXNG configuration
       - ./searxng:/etc/searxng:rw
     restart: unless-stopped
+    cap_drop:
+      - ALL
+    cap_add:
+      - CHOWN
+      - SETGID
+      - SETUID
+      - DAC_OVERRIDE
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "1m"
+        max-file: "1"
     
 volumes:
   ollama_data:

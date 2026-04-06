@@ -1,7 +1,7 @@
 use_default_settings: true
 
 search:
-safe_search: 0
+  safe_search: 0
   autocomplete: ""
   default_lang: ""
   formats:
@@ -12,3 +12,4 @@ server:
   secret_key: "no-key-required"
   limiter: false
   image_proxy: true
+  
