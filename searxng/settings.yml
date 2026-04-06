@@ -1,4 +1,14 @@
+use_default_settings: true
+
 search:
+safe_search: 0
+  autocomplete: ""
+  default_lang: ""
   formats:
     - html
-    - json # This is required for Open WebUI to read the data
+    - json
+
+server:
+  secret_key: "no-key-required"
+  limiter: false
+  image_proxy: true
